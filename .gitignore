@@ -8,10 +8,13 @@ __pycache__/
 
 # Local/authorized corpus and generated artifacts are environment-specific;
 # do not assume they are safe to publish. See README's copyright section.
+# The two small law_*_sample files ARE committed on purpose -- they're
+# original, self-written demo content (not the copyrighted official Laws),
+# used to give the deployed demo something to answer out of the box.
 data/raw/*
 !data/raw/.gitkeep
-data/cleaned/*
-!data/cleaned/.gitkeep
+!data/raw/law_36_sample.txt
+!data/raw/law_21_sample.html
 data/chunks/*
 !data/chunks/.gitkeep
 vector_store/*

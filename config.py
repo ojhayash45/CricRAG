@@ -102,7 +102,6 @@ class Settings(BaseSettings):
     # Paths
     # ------------------------------------------------------------------
     raw_data_dir: Path = BASE_DIR / "data" / "raw"
-    cleaned_data_dir: Path = BASE_DIR / "data" / "cleaned"
     chunks_data_dir: Path = BASE_DIR / "data" / "chunks"
     vector_store_dir: Path = BASE_DIR / "vector_store"
 
