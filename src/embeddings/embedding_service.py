@@ -13,7 +13,6 @@ from __future__ import annotations
 import logging
 
 import numpy as np
-from sentence_transformers import SentenceTransformer
 
 from config import settings
 
@@ -25,7 +24,17 @@ class EmbeddingService:
         """
         normalize=True L2-normalizes every embedding, which is what lets a
         FAISS inner-product index behave as cosine similarity downstream.
+
+        sentence_transformers (and the torch it pulls in) is imported here,
+        inside __init__, rather than at module level -- torch is heavy
+        enough that importing it eagerly at process startup measurably
+        raises baseline memory before a single request is served, which
+        matters on memory-constrained hosts (e.g. a 512MB free tier).
+        Deferring it means that cost is only paid the first time an
+        EmbeddingService is actually constructed.
         """
+        from sentence_transformers import SentenceTransformer
+
         self.model_name = model_name or settings.embedding_model
         self.normalize = normalize
         logger.info("Loading embedding model: %s", self.model_name)
