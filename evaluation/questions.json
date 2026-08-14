@@ -1,0 +1,276 @@
+[
+  {
+    "id": "q01",
+    "category": "direct",
+    "question": "What is a no-ball?",
+    "expected_law_numbers": ["21"],
+    "expected_sections": ["21.1", "21.2"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q02",
+    "category": "direct",
+    "question": "What does LBW stand for and what is it?",
+    "expected_law_numbers": ["36"],
+    "expected_sections": ["36.1"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q03",
+    "category": "direct",
+    "question": "What is a front-foot no-ball?",
+    "expected_law_numbers": ["21"],
+    "expected_sections": ["21.1"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q04",
+    "category": "direct",
+    "question": "What is a back-foot no-ball?",
+    "expected_law_numbers": ["21"],
+    "expected_sections": ["21.2"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q05",
+    "category": "direct",
+    "question": "What is Law 36 about?",
+    "expected_law_numbers": ["36"],
+    "expected_sections": ["36.1", "36.2", "36.3"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q06",
+    "category": "direct",
+    "question": "Explain the rule for leg before wicket.",
+    "expected_law_numbers": ["36"],
+    "expected_sections": ["36.1"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q07",
+    "category": "condition",
+    "question": "When is a batter out LBW?",
+    "expected_law_numbers": ["36"],
+    "expected_sections": ["36.1"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q08",
+    "category": "condition",
+    "question": "Under what condition does the front-foot no-ball rule apply?",
+    "expected_law_numbers": ["21"],
+    "expected_sections": ["21.1"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q09",
+    "category": "condition",
+    "question": "When does the back-foot no-ball rule apply regardless of the front foot?",
+    "expected_law_numbers": ["21"],
+    "expected_sections": ["21.2"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q10",
+    "category": "condition",
+    "question": "When does LBW not apply even if the ball would have hit the stumps?",
+    "expected_law_numbers": ["36"],
+    "expected_sections": ["36.2", "36.3"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q11",
+    "category": "condition",
+    "question": "What conditions must be met for a delivery to be a front-foot no-ball?",
+    "expected_law_numbers": ["21"],
+    "expected_sections": ["21.1"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q12",
+    "category": "condition",
+    "question": "When is a batter NOT out LBW despite being struck on the pad in front of the stumps?",
+    "expected_law_numbers": ["36"],
+    "expected_sections": ["36.2", "36.3"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q13",
+    "category": "scenario",
+    "question": "If the ball pitches outside leg stump and then hits the batter's pad in front of the stumps, is the batter out LBW?",
+    "expected_law_numbers": ["36"],
+    "expected_sections": ["36.3"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q14",
+    "category": "scenario",
+    "question": "If a batter was outside the line of off stump playing a shot and gets hit on the pad, can they be given out LBW?",
+    "expected_law_numbers": ["36"],
+    "expected_sections": ["36.2"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q15",
+    "category": "scenario",
+    "question": "If the bowler's front foot is not behind the popping crease at delivery, is it a no-ball?",
+    "expected_law_numbers": ["21"],
+    "expected_sections": ["21.1"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q16",
+    "category": "scenario",
+    "question": "If the bowler's back foot lands outside the return crease but the front foot is legal, is it still a no-ball?",
+    "expected_law_numbers": ["21"],
+    "expected_sections": ["21.2"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q17",
+    "category": "scenario",
+    "question": "If the ball hits the bat first and then the pad, can the batter be out LBW?",
+    "expected_law_numbers": ["36"],
+    "expected_sections": ["36.1"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q18",
+    "category": "scenario",
+    "question": "If a batter makes no attempt to play a shot and is struck on the pad in front of the stumps, what dismissal could apply?",
+    "expected_law_numbers": ["36"],
+    "expected_sections": ["36.1"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q19",
+    "category": "comparison",
+    "question": "What is the difference between a front-foot no-ball and a back-foot no-ball?",
+    "expected_law_numbers": ["21"],
+    "expected_sections": ["21.1", "21.2"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q20",
+    "category": "comparison",
+    "question": "How does an LBW decision differ depending on whether the ball pitched in line or outside leg stump?",
+    "expected_law_numbers": ["36"],
+    "expected_sections": ["36.1", "36.3"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q21",
+    "category": "comparison",
+    "question": "How does playing a shot outside off stump change an LBW appeal compared to playing no shot at all?",
+    "expected_law_numbers": ["36"],
+    "expected_sections": ["36.1", "36.2"],
+    "expect_sufficient_relevance": true
+  },
+  {
+    "id": "q22",
+    "category": "comparison",
+    "question": "Compare Law 21 and Law 36 -- what kinds of infringements do they cover?",
+    "expected_law_numbers": ["21", "36"],
+    "expected_sections": [],
+    "expect_sufficient_relevance": true,
+    "notes": "Broad comparison spanning both indexed laws; section-level match not required."
+  },
+  {
+    "id": "q23",
+    "category": "follow_up",
+    "question": "What if the bowler's back foot is the issue instead of the front foot?",
+    "conversation_history": [
+      { "role": "user", "content": "What is a no-ball?" },
+      { "role": "assistant", "content": "A no-ball can occur if the bowler's front foot is not behind the popping crease at delivery." }
+    ],
+    "expected_law_numbers": ["21"],
+    "expected_sections": ["21.2"],
+    "expect_sufficient_relevance": true,
+    "notes": "Retrieval intentionally does not use conversation history (spec section 15), so this question must carry enough keywords ('back foot') on its own to retrieve correctly."
+  },
+  {
+    "id": "q24",
+    "category": "follow_up",
+    "question": "Does it still apply if the ball pitched outside leg stump?",
+    "conversation_history": [
+      { "role": "user", "content": "What is LBW?" },
+      { "role": "assistant", "content": "LBW is a dismissal that can apply when the ball strikes the batter's pad in line with the stumps without a shot being played." }
+    ],
+    "expected_law_numbers": ["36"],
+    "expected_sections": ["36.3"],
+    "expect_sufficient_relevance": true,
+    "notes": "Minimal-context follow-up; still contains 'pitched outside leg stump' keywords for standalone retrieval."
+  },
+  {
+    "id": "q25",
+    "category": "follow_up",
+    "question": "What happens after that?",
+    "conversation_history": [
+      { "role": "user", "content": "What is a no-ball?" },
+      { "role": "assistant", "content": "A no-ball can occur if the bowler's front foot is not behind the popping crease at delivery." }
+    ],
+    "expected_law_numbers": [],
+    "expected_sections": [],
+    "expect_sufficient_relevance": false,
+    "notes": "Deliberately context-free follow-up with no retrievable keywords of its own -- demonstrates the known MVP limitation that retrieval does not rewrite/expand follow-up queries using history. Expected to fail retrieval, not a bug."
+  },
+  {
+    "id": "q26",
+    "category": "out_of_domain",
+    "question": "What is the capital of France?",
+    "expected_law_numbers": [],
+    "expected_sections": [],
+    "expect_sufficient_relevance": false
+  },
+  {
+    "id": "q27",
+    "category": "out_of_domain",
+    "question": "Who won the 2019 Cricket World Cup?",
+    "expected_law_numbers": [],
+    "expected_sections": [],
+    "expect_sufficient_relevance": false,
+    "notes": "Cricket-adjacent but a factual/historical question, not a rules question -- not covered by the Laws-of-Cricket corpus."
+  },
+  {
+    "id": "q28",
+    "category": "out_of_domain",
+    "question": "What's the offside rule in football?",
+    "expected_law_numbers": [],
+    "expected_sections": [],
+    "expect_sufficient_relevance": false
+  },
+  {
+    "id": "q29",
+    "category": "out_of_domain",
+    "question": "How do I bake a chocolate cake?",
+    "expected_law_numbers": [],
+    "expected_sections": [],
+    "expect_sufficient_relevance": false
+  },
+  {
+    "id": "q30",
+    "category": "out_of_domain",
+    "question": "What is the boiling point of water?",
+    "expected_law_numbers": [],
+    "expected_sections": [],
+    "expect_sufficient_relevance": false
+  },
+  {
+    "id": "q31",
+    "category": "out_of_domain",
+    "question": "Who is the president of the United States?",
+    "expected_law_numbers": [],
+    "expected_sections": [],
+    "expect_sufficient_relevance": false
+  },
+  {
+    "id": "q32",
+    "category": "out_of_domain",
+    "question": "Can a batter be timed out?",
+    "expected_law_numbers": [],
+    "expected_sections": [],
+    "expect_sufficient_relevance": false,
+    "notes": "A genuine Law of Cricket, but not covered by the current demo corpus (only Law 21 and Law 36 are indexed) -- correctly out-of-scope for THIS index, not out-of-domain for cricket in general. Expand the corpus and update this expectation if Law 40 (Timed Out) is added."
+  }
+]

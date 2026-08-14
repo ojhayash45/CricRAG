@@ -1,0 +1,13 @@
+[server]
+# The default ("watchdog") file watcher walks every loaded module's
+# __path__ on each rerun to detect source changes. transformers (a
+# sentence-transformers dependency) lazily registers many optional
+# vision-model submodules that import torchvision, which this project
+# doesn't install (we only need text embeddings) -- so the watcher logs a
+# harmless but very noisy ModuleNotFoundError traceback per submodule.
+# Disabling the watcher removes that noise entirely; restart the app
+# manually after editing source files.
+fileWatcherType = "none"
+
+[logger]
+level = "info"
