@@ -20,7 +20,7 @@ from src.generation.llm import LLMConfigurationError, LLMGenerationError, LLMPro
 from src.pipeline.ingest_runner import rebuild_index_from_saved_chunks, run_ingestion
 from src.pipeline.rag_pipeline import RAGPipeline
 from src.retrieval.retriever import Retriever
-from src.vectorstore.faiss_store import FAISSStore
+from src.vectorstore.factory import VectorStore, load_vector_store
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger("app")
@@ -45,11 +45,8 @@ def get_embedding_service() -> EmbeddingService:
 
 
 @st.cache_resource(show_spinner="Loading vector index...")
-def get_vector_store() -> FAISSStore | None:
-    try:
-        return FAISSStore.load()
-    except FileNotFoundError:
-        return None
+def get_vector_store() -> VectorStore | None:
+    return load_vector_store()
 
 
 @st.cache_resource(show_spinner="Connecting to LLM provider...")
@@ -100,10 +97,13 @@ with st.sidebar:
         st.metric("Indexed chunks", vector_store.size)
         st.metric("Laws covered", len(law_numbers))
         st.caption(f"Edition: {', '.join(sorted(editions)) if editions else 'N/A'}")
-        index_path = settings.vector_store_dir / "index.faiss"
-        if index_path.exists():
-            mtime = datetime.fromtimestamp(index_path.stat().st_mtime)
-            st.caption(f"Last indexed: {mtime.strftime('%Y-%m-%d %H:%M:%S')}")
+        if settings.database_url:
+            st.caption("Backend: Postgres (persists across restarts)")
+        else:
+            index_path = settings.vector_store_dir / "index.faiss"
+            if index_path.exists():
+                mtime = datetime.fromtimestamp(index_path.stat().st_mtime)
+                st.caption(f"Last indexed: {mtime.strftime('%Y-%m-%d %H:%M:%S')}")
     else:
         st.warning("No index found yet.")
 

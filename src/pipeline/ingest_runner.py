@@ -25,7 +25,7 @@ from src.ingestion.cleaner import deduplicate_by_hash
 from src.ingestion.document_loader import LocalDocumentLoader
 from src.ingestion.parser import parse_law_document
 from src.models.schemas import Chunk, Document
-from src.vectorstore.faiss_store import FAISSStore
+from src.vectorstore.factory import build_fresh_vector_store
 
 logger = logging.getLogger(__name__)
 
@@ -114,7 +114,7 @@ def _embed_and_index(chunks: list[Chunk]) -> int:
     embeddings = embedder.embed_documents([c.text for c in chunks])
     logger.info("Embeddings generated: %d", embeddings.shape[0])
 
-    store = FAISSStore(dimension=embedder.dimension)
+    store = build_fresh_vector_store(dimension=embedder.dimension)
     store.add(embeddings, chunks)
     store.save()
     logger.info("Vector index built successfully.")

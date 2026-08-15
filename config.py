@@ -99,6 +99,21 @@ class Settings(BaseSettings):
     )
 
     # ------------------------------------------------------------------
+    # Vector store backend
+    # ------------------------------------------------------------------
+    database_url: str | None = Field(
+        default=None,
+        repr=False,
+        description=(
+            "Postgres connection string (e.g. Neon, with pgvector enabled). "
+            "When set, the app stores/searches chunks in Postgres instead of "
+            "local FAISS index files -- the only backend that survives a "
+            "restart on a host with no persistent disk (e.g. Render's free "
+            "tier). When unset, falls back to local FAISS files."
+        ),
+    )
+
+    # ------------------------------------------------------------------
     # Paths
     # ------------------------------------------------------------------
     raw_data_dir: Path = BASE_DIR / "data" / "raw"

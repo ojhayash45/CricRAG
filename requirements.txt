@@ -19,6 +19,14 @@ faiss-cpu>=1.8,<2
 # 3.13). Let pip pick whichever numpy 1.x/2.x satisfies every constraint.
 numpy>=1.26,<3
 
+# --- Persistent vector store (Postgres + pgvector, optional) -------------
+# Used instead of local FAISS files when DATABASE_URL is set -- see
+# src/vectorstore/postgres_store.py. Needed on any host with no persistent
+# disk (e.g. Render's free tier), where local FAISS files don't survive a
+# restart.
+psycopg[binary]>=3.1,<4
+pgvector>=0.2,<1
+
 # --- LLM generation (Phase 8) -------------------------------------------
 openai>=1.0,<2
 

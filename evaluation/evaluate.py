@@ -45,7 +45,7 @@ from src.generation.llm import LLMConfigurationError, get_llm_provider  # noqa: 
 from src.generation.prompts import format_context  # noqa: E402
 from src.pipeline.rag_pipeline import RAGPipeline, dedupe_sources  # noqa: E402
 from src.retrieval.retriever import Retriever  # noqa: E402
-from src.vectorstore.faiss_store import FAISSStore  # noqa: E402
+from src.vectorstore.factory import load_vector_store  # noqa: E402
 
 logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger("evaluate")
@@ -167,11 +167,9 @@ def supported_answer_rate(pipeline: RAGPipeline, questions: list[dict]) -> tuple
 def main() -> int:
     questions = load_questions()
 
-    try:
-        store = FAISSStore.load()
-    except FileNotFoundError as exc:
-        print(f"No vector index found: {exc}")
-        print("Run `python scripts/ingest.py` first.")
+    store = load_vector_store()
+    if store is None or store.size == 0:
+        print("No vector index found. Run `python scripts/ingest.py` first.")
         return 1
 
     embedder = EmbeddingService()

@@ -1,10 +1,12 @@
 """
-Retriever: ties EmbeddingService + FAISSStore together into the
-question -> chunks step of the RAG pipeline.
+Retriever: ties EmbeddingService + a vector store together into the
+question -> chunks step of the RAG pipeline. Works with either backend
+(local FAISS files or Postgres/pgvector -- see src/vectorstore/factory.py)
+since both satisfy the same search() interface.
 
     user question
         -> query embedding
-        -> FAISS search (top_k)
+        -> vector store search (top_k)
         -> score filtering (score_threshold)
         -> retrieved context
 
@@ -27,7 +29,8 @@ from dataclasses import dataclass, field
 
 from config import settings
 from src.embeddings.embedding_service import EmbeddingService
-from src.vectorstore.faiss_store import FAISSStore, SearchResult
+from src.vectorstore.factory import VectorStore
+from src.vectorstore.faiss_store import SearchResult
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +52,7 @@ class Retriever:
     def __init__(
         self,
         embedding_service: EmbeddingService,
-        vector_store: FAISSStore,
+        vector_store: VectorStore,
         top_k: int | None = None,
         score_threshold: float | None = None,
     ):
