@@ -14,7 +14,10 @@ pypdf>=4.0,<6
 # src/embeddings/embedding_service.py for why.
 fastembed>=0.3,<1
 faiss-cpu>=1.8,<2
-numpy>=1.26,<2
+# fastembed requires numpy>=2.1 on Python 3.13+ (>=2.3 on 3.14+); pinning
+# numpy<2 here caused an unresolvable conflict on Render's build (Python
+# 3.13). Let pip pick whichever numpy 1.x/2.x satisfies every constraint.
+numpy>=1.26,<3
 
 # --- LLM generation (Phase 8) -------------------------------------------
 openai>=1.0,<2
