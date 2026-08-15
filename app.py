@@ -5,7 +5,7 @@ This file only orchestrates: it loads cached resources (embedding model,
 FAISS index, LLM client), wires them into a RAGPipeline per query, and
 renders the result. All actual RAG logic lives in src/ -- nothing here
 recomputes embeddings or rebuilds the index except in response to an
-explicit sidebar button press (spec section 36).
+explicit sidebar button press.
 """
 from __future__ import annotations
 

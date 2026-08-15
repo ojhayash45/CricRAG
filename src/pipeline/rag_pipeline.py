@@ -17,9 +17,9 @@ it does not know which LLM SDK is in use.
 Follow-up questions: conversation_history is passed to the LLM so it can
 resolve references ("what about that?"), but retrieval always runs fresh
 against the current question text only -- history never substitutes for
-or overrides source grounding (see spec section 15). Query rewriting for
-follow-ups is intentionally not implemented in this MVP (spec marks it as
-optional); it can be added later without changing this class's interface.
+or overrides source grounding. Query rewriting for follow-ups is not
+implemented yet; it can be added later without changing this class's
+interface.
 """
 from __future__ import annotations
 
@@ -62,7 +62,7 @@ def compute_confidence(top_score: float | None, score_threshold: float) -> str:
     """
     Map the best filtered similarity score to a coarse relevance label.
     This reflects retrieval relevance only, not factual certainty about the
-    generated answer -- see spec section 35.
+    generated answer.
     """
     if top_score is None or top_score < score_threshold:
         return "insufficient"

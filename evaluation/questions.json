@@ -187,7 +187,7 @@
     "expected_law_numbers": ["21"],
     "expected_sections": ["21.2"],
     "expect_sufficient_relevance": true,
-    "notes": "Retrieval intentionally does not use conversation history (spec section 15), so this question must carry enough keywords ('back foot') on its own to retrieve correctly."
+    "notes": "Retrieval does not use conversation history, so this question must carry enough keywords ('back foot') on its own to retrieve correctly."
   },
   {
     "id": "q24",
@@ -213,7 +213,7 @@
     "expected_law_numbers": [],
     "expected_sections": [],
     "expect_sufficient_relevance": false,
-    "notes": "Deliberately context-free follow-up with no retrievable keywords of its own -- demonstrates the known MVP limitation that retrieval does not rewrite/expand follow-up queries using history. Expected to fail retrieval, not a bug."
+    "notes": "Context-free follow-up with no retrievable keywords of its own -- demonstrates the known limitation that retrieval does not rewrite/expand follow-up queries using history. Expected to fail retrieval, not a bug."
   },
   {
     "id": "q26",

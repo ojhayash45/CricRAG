@@ -4,9 +4,9 @@ Shared ingestion pipeline logic.
 Both scripts/ingest.py (CLI) and app.py's sidebar "Rebuild index" control
 call into this module, so there is exactly one implementation of
 load -> dedupe -> chunk -> save -> embed -> index -> save index. Streamlit
-must never re-embed on every rerun (spec section 36) -- callers are
-responsible for only invoking these functions on an explicit user action,
-not on every script/page load.
+must never re-embed on every rerun -- callers are responsible for only
+invoking these functions on an explicit user action, not on every
+script/page load.
 
 Ingestion is local-corpus-only: place authorized .txt/.html/.pdf files in
 data/raw/ and run this. There is no live-scraping path -- see README's

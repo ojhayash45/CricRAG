@@ -6,7 +6,7 @@ All tunables live here and are overridable via environment variables / a
 
 Values such as CHUNK_SIZE, TOP_K and SIMILARITY_THRESHOLD are *starting
 points*, not universal truths -- they should be revisited once the
-evaluation harness (Phase 11) produces real numbers.
+evaluation harness produces real numbers.
 """
 from __future__ import annotations
 
