@@ -205,23 +205,17 @@ python evaluation/evaluate.py
 
 Runs `evaluation/questions.json` (32 questions across direct/condition/scenario/comparison/follow-up/out-of-domain categories, with expected Law/Section grounded in what's actually indexed) against whatever is currently in `vector_store/`. Reports **measured** Retrieval Recall@K, Citation Accuracy, Supported Answer Rate (skipped honestly if no LLM is configured, since faking it would violate the whole point of the harness), and Out-of-domain rejection — no hard-coded scores.
 
-Measured against the small 2-law demo corpus (`tests/fixtures/`, 5 chunks total), with `LLM_PROVIDER=groq` configured (`llama-3.3-70b-versatile`):
-```
-Retrieval Recall@5: 100.0% (24 questions)
-Citation Accuracy: 91.7% (24 questions)
-Supported Answer Rate: 100.0% (22 questions, lexical-overlap heuristic)
-Out-of-domain rejection: 62.5% (8 questions)
-```
-Without an LLM configured, `Supported Answer Rate` prints `SKIPPED` instead — it is never fabricated.
+Without an LLM configured, `Supported Answer Rate` prints `SKIPPED` instead — it is never fabricated. **These numbers are not stable as the corpus grows or the embedding backend changes**, which is exactly the kind of thing the harness exists to catch — three real, measured runs told three different stories:
 
-**These numbers are not stable as the corpus grows**, which is exactly the kind of thing the harness exists to catch. Re-measured against a real 42-law corpus (the official Laws of Cricket plus ICC ODI/T20/Test Playing Conditions PDFs, 881 chunks after deduplication):
-```
-Retrieval Recall@5: 37.5% (24 questions)
-Citation Accuracy: 100.0% (24 questions)
-Supported Answer Rate: 50.0% (24 questions, lexical-overlap heuristic)
-Out-of-domain rejection: 62.5% (8 questions)
-```
-Recall@5 dropping from 100% to 37.5% is a real, measured finding, not a bug: `all-MiniLM-L6-v2` is a small general-purpose model with no cricket-specific fine-tuning, and at 881 candidate chunks it sometimes ranks a different dismissal law above the one actually asked about — e.g. for *"When is a batter out LBW?"*, the Law 36.1 (LBW) chunk scores only 0.47 cosine similarity against the query, while Law 38 (Run Out) and Law 40 (Timed Out) chunks score 0.57–0.59 and get returned instead. This is a genuine limitation to calibrate against (a stronger or domain-tuned embedding model, or reranking — see Future Improvements), not something to paper over.
+| Run | Corpus | Embedding backend | Recall@5 | Citation Acc. | Supported Answer | OOD rejection |
+|---|---|---|---|---|---|---|
+| 1 | 2-law demo (5 chunks) | sentence-transformers | 100.0% | 91.7% | 100.0% | 62.5% |
+| 2 | Real 42-law (881 chunks) | sentence-transformers | 37.5% | 100.0% | 50.0% | 62.5% |
+| 3 | Real 42-law (886 chunks) | fastembed (current) | **83.3%** | **100.0%** | **79.2%** | 62.5% |
+
+Run 2 was a real, measured regression, not a bug: at 881 candidate chunks, `sentence-transformers/all-MiniLM-L6-v2` sometimes ranked a different dismissal law above the one actually asked about — for *"When is a batter out LBW?"*, the Law 36.1 (LBW) chunk scored only 0.47 cosine similarity against the query, while Law 38 (Run Out) and Law 40 (Timed Out) scored 0.57–0.59 and got returned instead.
+
+Run 3 uses `fastembed` (ONNX Runtime) instead — adopted primarily to fix a deployment memory problem (see [Deployment](#deployment)), not for retrieval quality. It happened to fix both: the same LBW query now scores Law 36.1 at 0.676 and ranks it first. This wasn't the goal, it's a side effect worth being honest about rather than claiming credit for — a different ONNX export of nominally "the same" model measurably changed retrieval behavior, which is itself a useful reminder that these numbers must be re-measured after any backend change, not assumed to transfer.
 
 ## Testing
 
@@ -233,7 +227,7 @@ pytest -q
 
 ## Limitations
 
-- **Embedding model struggles to disambiguate similar dismissal laws at full-corpus scale.** Recall@5 drops from 100% (5-chunk demo corpus) to 37.5% (881-chunk real corpus) with the default `all-MiniLM-L6-v2` model — see the measured example under Evaluation. Worth recalibrating with a stronger or domain-tuned embedding model, or adding reranking, before trusting this for real study/reference use.
+- **Retrieval recall drops at full-corpus scale even with the current backend.** 83.3% Recall@5 (fastembed, 886 chunks) is a large improvement over the earlier 37.5% (sentence-transformers), but still well short of the 100% seen on the tiny demo corpus — see the three-run comparison under Evaluation. Reranking or hybrid search would likely close more of that gap.
 - **Uncalibrated thresholds.** `SIMILARITY_THRESHOLD`, `CHUNK_SIZE`/`CHUNK_OVERLAP`, and the confidence-band cutoffs are starting points; use `evaluation/evaluate.py` to tune them against a real corpus.
 - **Near-duplicate content across related PDFs isn't merged.** The ICC Playing Conditions PDFs each re-print the 42 base Laws with small wording differences (e.g. "See Appendix A.13" vs. "See paragraph 13 of Appendix A"), so exact-hash deduplication doesn't catch them — multiple near-identical chunks can end up competing in retrieval. Semantic/near-duplicate detection is a V2 concern (see Future Improvements).
 - **`split_into_laws()` heading detection is regex/heuristic-based**, tuned against the real MCC Laws of Cricket PDF structure (all-caps headings, contents page, detailed index). It correctly found all 42 laws there, plus one harmless extra front-matter chunk mislabeled as a law; a differently-formatted PDF may need the regex adjusted, or may fall back to being indexed as a single undivided document.
