@@ -60,7 +60,10 @@ class PostgresVectorStore:
         import psycopg
         from pgvector.psycopg import register_vector
 
-        conn = psycopg.connect(self.database_url, autocommit=True)
+        # Explicit timeout: psycopg's default can hang far longer than is
+        # useful if the host is unreachable/slow to wake, and a fast, clear
+        # failure is much easier to debug than an indefinite hang.
+        conn = psycopg.connect(self.database_url, autocommit=True, connect_timeout=15)
         conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
         register_vector(conn)
         return conn

@@ -6,14 +6,13 @@ against the same database the app uses.
 """
 from __future__ import annotations
 
-import os
-
 import numpy as np
 import pytest
 
+from config import settings
 from src.models.schemas import Chunk
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = settings.database_url
 pytestmark = pytest.mark.skipif(not DATABASE_URL, reason="DATABASE_URL not set -- skipping Postgres integration tests")
 
 if DATABASE_URL:
