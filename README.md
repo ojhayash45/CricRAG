@@ -2,7 +2,7 @@
 
 A retrieval-augmented generation (RAG) system that answers questions about the Laws of Cricket from an authorized, locally-indexed corpus — with every component (ingestion, chunking, embeddings, vector search, generation) implemented as plain, inspectable Python rather than hidden behind a framework.
 
-Built with Python, Streamlit, Sentence-Transformers, FAISS, and a pluggable LLM provider (Groq/GroqCloud by default).
+Built with Python, Streamlit, fastembed (ONNX Runtime), FAISS, and a pluggable LLM provider (Groq/GroqCloud by default).
 
 ## Project Overview
 
@@ -27,7 +27,7 @@ flowchart TD
     end
 
     subgraph Indexing
-        E --> F[EmbeddingService<br/>Sentence-Transformers]
+        E --> F[EmbeddingService<br/>fastembed / ONNX]
         F --> G[FAISSStore<br/>index.faiss + metadata.json]
     end
 
@@ -70,7 +70,9 @@ flowchart TD
 
 ## Embedding Model
 
-`src/embeddings/embedding_service.py` wraps Sentence-Transformers (`EMBEDDING_MODEL`, default `sentence-transformers/all-MiniLM-L6-v2`). Vectors are L2-normalized, which is what lets the FAISS index use inner product as cosine similarity. Swapping models is a config change, not a code change.
+`src/embeddings/embedding_service.py` wraps [fastembed](https://github.com/qdrant/fastembed) (`EMBEDDING_MODEL`, default `sentence-transformers/all-MiniLM-L6-v2` — same model, run via ONNX Runtime rather than PyTorch). Vectors are already L2-normalized by fastembed, which is what lets the FAISS index use inner product as cosine similarity. Swapping models is a config change, not a code change.
+
+fastembed was chosen over the more common `sentence-transformers` specifically because it doesn't depend on `torch` — torch alone was enough to exceed a 512MB deployment host's memory at process startup (see [Deployment](#deployment) below). It also turned out faster to load in practice.
 
 ## FAISS Retrieval
 
@@ -118,7 +120,7 @@ See [.env.example](.env.example) for the full list. Key ones:
 
 | Variable | Purpose |
 |---|---|
-| `EMBEDDING_MODEL` | Sentence-Transformers model name |
+| `EMBEDDING_MODEL` | fastembed model name |
 | `LLM_PROVIDER` / `LLM_MODEL` / `LLM_API_KEY` | LLM provider config (`groq` is the built-in provider) |
 | `GROQ_API_KEY` | Alias for `LLM_API_KEY` (mapped automatically; `GROK_API_KEY` also still accepted for backwards compatibility) |
 | `TOP_K` / `SIMILARITY_THRESHOLD` | Retrieval size and relevance cutoff |
@@ -175,6 +177,25 @@ streamlit run app.py
 ```
 
 The sidebar shows live knowledge-base stats (chunk/law counts, last-indexed time) and has **Rebuild index** / **Reindex from saved chunks** / **Reload index from disk** controls — the app never re-parses or re-embeds on its own. Enable **Show retrieval details** to see raw retrieval scores per chunk alongside every answer.
+
+## Deployment
+
+Deployed on [Render](https://render.com) as a Python web service pointed at this repo:
+
+| Field | Value |
+|---|---|
+| Root Directory | *(blank — `app.py` is at the repo root)* |
+| Build Command | `pip install -r requirements.txt` |
+| Start Command | `streamlit run app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true` |
+| Environment Variables | `LLM_PROVIDER=groq`, `LLM_API_KEY=<your key>`, `LLM_MODEL=llama-3.3-70b-versatile` |
+
+The Start Command's flags aren't optional: Render assigns a random port via `$PORT` and requires the service to bind `0.0.0.0`, not `localhost`, or the health check fails and the deploy never goes live.
+
+**Memory matters more than it looks like it should.** The first deploy attempt used `sentence-transformers`, which pulls in `torch` — importing it alone was enough to exceed Render's free tier (512MB RAM), crashing the process before it ever served a request. Two fixes, both now in the code:
+1. The embedding-model import is deferred into `EmbeddingService.__init__` rather than sitting at module level, so it's only paid for once an embedding is actually requested, not at process boot.
+2. `torch`/`sentence-transformers` were replaced with `fastembed` (ONNX Runtime), which has no torch dependency at all and a much smaller runtime footprint for the same model.
+
+No FAISS index is committed to the repo (to avoid ever risking copyrighted chunk text landing in git history), so after each fresh deploy, click **Rebuild index** once in the sidebar to build it from `data/raw/`'s committed demo corpus.
 
 ## Evaluation
 

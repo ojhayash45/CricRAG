@@ -9,7 +9,10 @@ lxml>=5.1,<6
 pypdf>=4.0,<6
 
 # --- Chunking / embeddings / vector search (Phase 4-6) -----------------
-sentence-transformers>=2.7,<3
+# fastembed (ONNX Runtime) instead of sentence-transformers (PyTorch) --
+# same default model, far smaller memory footprint. See
+# src/embeddings/embedding_service.py for why.
+fastembed>=0.3,<1
 faiss-cpu>=1.8,<2
 numpy>=1.26,<2
 
